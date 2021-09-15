@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for glab.
-GH_REPO="https://github.com/particledecay/asdf-glab"
+GH_REPO="https://github.com/profclems/glab"
 TOOL_NAME="glab"
 TOOL_TEST="glab version"
 
@@ -37,12 +37,14 @@ list_all_versions() {
 }
 
 download_release() {
-  local version filename url
+  local version filename url os arch
   version="$1"
   filename="$2"
+  os=$(get_os)
+  arch=$(get_arch)
 
   # TODO: Adapt the release URL convention for glab
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}_${version}_${os}_${arch}.tar.gz"
 
   echo "* Downloading $TOOL_NAME release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -51,7 +53,7 @@ download_release() {
 install_version() {
   local install_type="$1"
   local version="$2"
-  local install_path="$3"
+  local install_path="${3%/bin}/bin"
 
   if [ "$install_type" != "version" ]; then
     fail "asdf-$TOOL_NAME supports release installs only"
@@ -64,11 +66,37 @@ install_version() {
     # TODO: Asert glab executable exists.
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-    test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
+    test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
 
     echo "$TOOL_NAME $version installation was successful!"
   ) || (
     rm -rf "$install_path"
     fail "An error ocurred while installing $TOOL_NAME $version."
   )
+}
+
+get_os() {
+  local os=$(uname)
+
+  case $os in
+    Darwin)
+      echo macOS
+      ;;
+    *)
+      echo $os
+      ;;
+  esac
+}
+
+get_arch() {
+  local arch=$(uname -m)
+
+  case $arch in
+    *86)
+      echo i386
+      ;;
+    *)
+      echo $arch
+      ;;
+  esac
 }
