@@ -119,6 +119,8 @@ get_arch() {
   *86)
     echo i386
     ;;
+  *aarch64)
+    echo arm64
   *)
     echo $arch
     ;;
