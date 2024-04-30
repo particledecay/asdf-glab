@@ -3,7 +3,7 @@
 # asdf-glab [![Build](https://github.com/particledecay/asdf-glab/actions/workflows/build.yml/badge.svg)](https://github.com/particledecay/asdf-glab/actions/workflows/build.yml) [![Lint](https://github.com/particledecay/asdf-glab/actions/workflows/lint.yml/badge.svg)](https://github.com/particledecay/asdf-glab/actions/workflows/lint.yml)
 
 
-[glab](https://github.com/profclems/glab) plugin for the [asdf version manager](https://asdf-vm.com).
+[glab](https://gitlab.com/gitlab-org/cli) plugin for the [asdf version manager](https://asdf-vm.com).
 
 </div>
 
@@ -11,7 +11,6 @@
 
 - [Dependencies](#dependencies)
 - [Install](#install)
-- [Why?](#why)
 - [Contributing](#contributing)
 - [License](#license)
 
