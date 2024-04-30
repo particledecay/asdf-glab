@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/particledecay/asdf-glab/compare/v1.0.0...v1.0.1) (2024-04-30)
+
+
+### Bug Fixes
+
+* translate aarch64 to arm64 ([3023285](https://www.github.com/particledecay/asdf-glab/commit/30232859ffd3445f7930b1ba431af7c7c780836c))
+
 ## 1.0.0 (2021-09-15)
 
 
