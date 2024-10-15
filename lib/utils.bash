@@ -104,7 +104,13 @@ get_os() {
 
   case $os in
   Darwin)
-    echo macOS
+    echo darwin
+    ;;
+  Linux)
+    echo linux
+    ;;
+  Windows)
+    echo windows
     ;;
   *)
     echo $os
@@ -117,11 +123,15 @@ get_arch() {
 
   case $arch in
   *86)
-    echo i386
+    echo 386
     ;;
   aarch64)
     echo arm64
     ;;
+  x86_64)
+    echo amd64
+    ;;
+
   *)
     echo $arch
     ;;
