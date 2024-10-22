@@ -21,6 +21,9 @@ fail() {
 
 curl_opts=(-fsSL)
 
+# starting with 1.47.0, the archive name OS name and architecture changes
+ARCHIVE_CHANGE_VERSION="1.47.0"
+
 # NOTE: You might want to remove this if glab is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
   curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
@@ -58,8 +61,8 @@ download_release() {
   local version filename url os arch cutoff_version compare_result
   version="$1"
   filename="$2"
-  os=$(get_os)
-  arch=$(get_arch)
+  os=$(get_os "$version")
+  arch=$(get_arch "$version")
   cutoff_version="1.23.0"
 
   # download from github if prior to version $cutoff_version
@@ -100,40 +103,44 @@ install_version() {
 }
 
 get_os() {
+  local version="$1"
   local os=$(uname)
+  local compare_result
 
-  case $os in
-  Darwin)
-    echo darwin
-    ;;
-  Linux)
-    echo linux
-    ;;
-  Windows)
-    echo windows
-    ;;
-  *)
-    echo $os
-    ;;
-  esac
+  compare_versions "$version" "$ARCHIVE_CHANGE_VERSION" || compare_result=$?
+  if [ $compare_result -gt 1 ]; then
+    case $os in
+    Darwin) echo darwin ;;
+    Linux) echo linux ;;
+    Windows) echo windows ;;
+    *) echo $os ;;
+    esac
+  else
+    case $os in
+    Darwin) echo macOS ;;
+    *) echo $os ;;
+    esac
+  fi
 }
 
 get_arch() {
+  local version="$1"
   local arch=$(uname -m)
+  local compare_result
 
-  case $arch in
-  *86)
-    echo 386
-    ;;
-  aarch64)
-    echo arm64
-    ;;
-  x86_64)
-    echo amd64
-    ;;
-
-  *)
-    echo $arch
-    ;;
-  esac
+  compare_versions "$version" "$ARCHIVE_CHANGE_VERSION" || compare_result=$?
+  if [ $compare_result -gt 1 ]; then
+    case $arch in
+    *86) echo 386 ;;
+    aarch64) echo arm64 ;;
+    x86_64) echo amd64 ;;
+    *) echo $arch ;;
+    esac
+  else
+    case $arch in
+    *86) echo i386 ;;
+    aarch64) echo arm64 ;;
+    *) echo $arch ;;
+    esac
+  fi
 }
