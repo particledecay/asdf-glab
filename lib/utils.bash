@@ -58,7 +58,7 @@ download_release() {
   local version filename url os arch cutoff_version compare_result
   version="$1"
   filename="$2"
-  os=$(get_os "$version")
+  os=$(get_os)
   arch=$(get_arch)
   cutoff_version="1.23.0"
   cutoff_version_2="1.46.1" # glab after this version changed the artifact naming convention
