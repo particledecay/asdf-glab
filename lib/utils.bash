@@ -60,22 +60,21 @@ download_release() {
   filename="$2"
   os=$(get_os)
   arch=$(get_arch)
-  cutoff_version="1.23.0"
+  cutoff_version="1.23.0"   # glab before this version used the old repository url
   cutoff_version_2="1.46.1" # glab after this version changed the artifact naming convention
-
-  compare_versions "$version" "$cutoff_version_2" || compare_result_2=$?
-  if [ $compare_result_2 -eq 3 ]; then # 1 = less, 2 = equal, 3 = greater
-    os="${os,,}"
-    if [ "$os" == "macos" ]; then
-      os="darwin"
-    fi
-  fi
 
   # download from github if prior to version $cutoff_version
   compare_versions "$version" "$cutoff_version" || compare_result=$?
   if [ $compare_result -eq 1 ]; then # 1 = less, 2 = equal, 3 = greater
     url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}_${version}_${os}_${arch}.tar.gz"
   else
+    compare_versions "$version" "$cutoff_version_2" || compare_result_2=$?
+    if [ $compare_result_2 -eq 3 ]; then # 1 = less, 2 = equal, 3 = greater
+      os="${os,,}"
+      if [ "$os" == "macos" ]; then
+        os="darwin"
+      fi
+    fi
     url="$GL_REPO/-/releases/v${version}/downloads/${TOOL_NAME}_${version}_${os}_${arch}.tar.gz"
   fi
 
